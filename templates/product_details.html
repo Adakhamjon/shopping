@@ -1,0 +1,149 @@
+{% extends "base.html"%}
+{% load static%}
+{% block main%}
+<!-- ============================ ITEM DETAIL ======================== -->
+	<div class="row">
+		<aside class="col-md-6">
+<div class="card">
+<article class="gallery-wrap"> 
+	<div class="img-big-wrap">
+	  <div> <a href="#"><img src="{%get_media_prefix%}{{product.image}}" id="main-image-frame"></a></div>
+	</div> <!-- slider-product.// -->
+	<div class="thumbs-wrap">
+		<a href="#" class="item-thumb"> <img src="{%get_media_prefix%}{{product.image}}" class="extra-image"></a>
+		{% for product_image in product.product_images.all %}
+	  <a href="#" class="item-thumb"> <img src=" {% get_media_prefix%}{{product_image.image}}" class="extra-image"></a>
+		{% endfor %}
+	</div> <!-- slider-nav.// -->
+	<script type="text/javascript">
+		const extraImage = document.querySelectorAll(".extra-image");
+		const mainImage = document.getElementById("main-image-frame");
+		extraImage.forEach((image) => {
+			image.addEventListener("click", (e) =>{
+				e.preventDefault();
+				mainImage.setAttribute("src",image.getAttribute("src"));
+			});
+		})
+	</script>
+</article> <!-- gallery-wrap .end// -->
+</div> <!-- card.// -->
+		</aside>
+		<main class="col-md-6">
+<article class="product-info-aside">
+
+<h2 class="title mt-3">{{context.title}} </h2>
+
+<div class="rating-wrap my-3">
+	<ul class="rating-stars">
+		<li style="width:80%" class="stars-active"> 
+			<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+			<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+			<i class="fa fa-star"></i> 
+		</li>
+		<li>
+			<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+			<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+			<i class="fa fa-star"></i> 
+		</li>
+	</ul>
+	<small class="label-rating text-muted">132 reviews</small>
+	<small class="label-rating text-success"> <i class="fa fa-clipboard-check"></i> 154 orders </small>
+</div> <!-- rating-wrap.// -->
+
+ <!-- price-detail-wrap .// -->
+ <div class="mb-3"> 
+	<var class="price h4">{{product.title}}</var> 
+</div>
+
+<p>{{product.description}} </p>
+<div class="mb-3"> 
+	<var class="price h4">{{product.price}} so'm</var> 
+</div>
+
+
+ <dl class="row">
+  <dt class="col-sm-3">Manufacturer</dt>
+  <dd class="col-sm-9"><a href="#">Great textile Ltd.</a></dd>
+
+  <dt class="col-sm-3">Article number</dt>
+  <dd class="col-sm-9">596 065</dd>
+
+  <dt class="col-sm-3">Guarantee</dt>
+  <dd class="col-sm-9">2 year</dd>
+
+  <dt class="col-sm-3">Delivery time</dt>
+  <dd class="col-sm-9">3-4 days</dd>
+
+  <dt class="col-sm-3">Availabilty</dt>
+  <dd class="col-sm-9">in Stock</dd>
+  <dt class="col-sm-3">Color</dt>
+  <dd class="col-sm-9">
+  <select name="color" id="color_id">
+  	<option value="-1" selected>Choose color</option>
+  	{% for color in product.product_colors.all %}
+  	<option value="{{color.id}}">{{color.name}}</option>
+  {% endfor %}
+  </select >
+  </dd>
+   <dt class="col-sm-3">Size</dt>
+  <dd class="col-sm-9">
+  <select name="size" id="size_id">
+  	<option value="-1" selected> Choose size</option>
+  	{% for size in product.product_sizes.all %}
+  	<option value="{{size.id}}">{{size.name}}</option>
+  {% endfor %}
+  </select >
+  </dd>
+ </dl>
+
+	<div class="form-row  mt-4">
+		<div class="form-group col-md flex-grow-0">
+			
+		</div> <!-- col.// -->
+		<div class="form-group col-md">
+			<button  type="submit" class="btn  btn-primary" id="add_to_cart"> 
+				<i class="fas fa-shopping-cart"></i> <span class="text">Add to cart</span> 
+			</button>
+			<a href="#" class="btn btn-light">
+        <i class="fas fa-envelope"></i> <span class="text">Contact supplier</span> 
+			</a>
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+
+</article> <!-- product-info-aside .// -->
+		</main> <!-- col.// -->
+	</div> <!-- row.// -->
+<script
+  src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+
+<script>
+	const addToCart = document.getElementById("add_to_cart");
+	const size = document.getElementById("size_id");
+	const color = document.getElementById("color_id");
+
+	addToCart.addEventListener("click", ()=>{
+		data = {
+			product_id: parseInt("{{product.id}}"),
+			color: parseInt(color.value),
+			size: parseInt(size.value)
+		}
+		console.log(data);
+		add_to_cart(data);
+	});
+
+   function add_to_cart(data){
+   	$.ajax("{% url 'add_to_cart' %}", {
+	    type: 'GET',  // http method
+	    data: data,  // data to submit
+	    success: function (data, status, xhr) {
+	        console.log(data);
+	        document.getElementById("id_cartitems_count").innerText = data["count"];
+    }
+});
+   		}
+</script>
+<!-- ================ ITEM DETAIL END .// ================= -->
+{% endblock main%}
+href="{% url 'add-cartitem' product_id=product.id%}"

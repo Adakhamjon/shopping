@@ -1,0 +1,30 @@
+{% load static%}
+<section class="padding-bottom">
+
+<header class="section-heading mb-4">
+	<h3 class="title-section">Latest products</h3>
+</header>
+
+<div class="row row-sm">
+	{% for product in latest_products%}
+	<div class="col-xl-2 col-lg-3 col-md-4 col-6">
+		<div  class="card card-sm card-product-grid">
+			<a href="{%url 'product-detail' slug=product.slug%}" class="img-wrap"> 
+				<b class="badge badge-danger mr-1">{% if is_new_product%}
+				   <span class="badge badge-danger"> NEW </span>
+				{% endif%}</b>
+				<img src="{%get_media_prefix%}{{product.image}}"> 
+			</a>
+			<figcaption class="info-wrap">
+				<a href="{%url 'product-detail' slug=product.slug%}" class="title">{{product.title}}</a>
+				<div class="price-wrap">
+					<span class="price">{{product.price}}</span>
+					<!--<del class="price-old">$90</del>--->
+				</div> <!-- price-wrap.// -->
+			</figcaption>
+		</div>
+	</div> <!-- col.// -->
+	{% endfor%}
+	
+</div> <!-- row.// -->
+</section>
